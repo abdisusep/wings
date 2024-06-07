@@ -1,4 +1,5 @@
 <?php  
+	session_start();
 	header('Content-Type: application/json');
 
 	include "../config/db.php";
@@ -20,10 +21,11 @@
 		$docCode   = 'TRX';
 		$docNumber = $rowCount['count'] + 1;
 
-		$sqlUser = "SELECT id FROM login WHERE user='{$_SESSION['user']}'";
+		$user = $_SESSION['user'];
+		$sqlUser = "SELECT id FROM login WHERE user='$user'";
 		$resultUser = $conn->query($sqlUser);
 		$rowUser = $resultUser->fetch_assoc();
-		
+
 		$user_id = $rowUser['id'];
 		$date = date('Y-m-d');
 		$sqlHeader = "INSERT INTO transaction_header (document_code, document_number, user_id, total, date) 
@@ -45,7 +47,7 @@
 			}
 		}
 
-		echo json_encode(['status' => 'success', 'tes' => $idHeader]);
+		echo json_encode(['status' => 'success']);
 	}
 
 ?>
