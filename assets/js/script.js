@@ -1,12 +1,11 @@
 loadProduct();
 loadCart();
 
-        $('#searchProduct').on('input', function() {
-            loadProduct();
-            console.log('a')
-        });
+$('#searchProduct').on('input', function() {
+    loadProduct();
+});
 
-        function loadProduct(params) {
+function loadProduct(params) {
             let searchValue = $('#searchProduct').val();
 
             $.ajax({
@@ -38,7 +37,7 @@ loadCart();
 
         function loadCart() {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
+            let totalCart = 0;
             cart.forEach(function(item, index) {
                     let row = '<div class="row">';
                     row += '<div class="col-10">';
@@ -52,6 +51,7 @@ loadCart();
                     row += '</div>';
 
                     $('#listCart').append(row);
+                    totalCart = totalCart + 1;
                 });
 
                 $('#listCart input[type="number"]').change(function() {
@@ -59,6 +59,12 @@ loadCart();
                     let newQty = parseInt($(this).val());
                     updateCartQuantity(index, newQty);
                 });
+
+                if (totalCart > 0) {
+                    $('#totalCart').removeClass('d-none');
+                }else{
+                    $('#totalCart').addClass('d-none');
+                }
         }   
 
         function addToCart(id) {
@@ -129,9 +135,34 @@ loadCart();
                 confirmButtonText: "Yes, delete it!"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        localStorage.removeItem('cart');
-                        $('#listCart').empty();
-                        loadCart();
+                        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+                        const transactionData = {
+                            items: cart
+                        };
+
+                        // Send data to the server
+                        $.ajax({
+                            url: 'json/checkout.php',
+                            method: 'POST',
+                            data: JSON.stringify(transactionData),
+                            contentType: 'application/json',
+                            success: function(response) {
+                                console.log(response)
+                                if (response.status === 'success') {
+                                    Swal.fire('Transaction successful!', '', 'success');
+                                    localStorage.removeItem('cart'); // Clear the cart
+                                    loadCart(); // Update cart display if you have this function
+                                } else {
+                                     Swal.fire({
+                                        icon: "warning",
+                                        title: response.message,
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                }
+                            }
+                        });
                     }
                 });
         }

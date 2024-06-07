@@ -1,11 +1,21 @@
 <?php  
 
-$sql = "SELECT * FROM transaction_header";
+$sql = "SELECT a.*, b.user FROM transaction_header a LEFT JOIN login b ON a.user_id=b.id";
 $result = $conn->query($sql);
 
+$list = '';
 if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
-        
+        $list .= " <tr>
+            <td>{$row['document_code']}{$row['document_number']}</td>
+            <td>{$row['user']}</td>
+            <td>Rp. " .formatRp($row['total']). "</td>
+            <td>{$row['date']}</td>
+            <td>
+                <span>- 1 x 1</span><br>
+                <span>- Product 2 x 1</span><br>
+            </td>
+        </tr>";
     }
 }
 
@@ -40,6 +50,9 @@ if ($result->num_rows > 0) {
                             <th>Item</th>
                         </tr>
                     </thead>
+                    <tbody>
+                        <?= $list; ?>
+                    </tbody>
                 </table>  
             </div>
         </div>

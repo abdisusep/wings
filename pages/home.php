@@ -37,7 +37,7 @@
                         <div class="mb-3">
                             <h5>Total : Rp. <span id="total"></span></h5>
                         </div>
-                        <button class="btn btn-primary" onclick="confirmCheckout()">Confirm</button>
+                        <button class="btn btn-primary" id="btnConfirm" onclick="confirmCheckout()">Confirm</button>
                     </div>
                 </div>
             </div>
