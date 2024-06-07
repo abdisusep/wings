@@ -5,7 +5,7 @@
     include "../config/func.php";
     
     $search = $_GET['search'];
-    $sql = "SELECT id, product_name, price FROM product WHERE product_name LIKE '%$search%'";
+    $sql = "SELECT id, product_name, price, discount FROM product WHERE product_name LIKE '%$search%'";
     $result = $conn->query($sql);
 
     $products = array();
@@ -15,7 +15,8 @@
             $products[] = [
                 'id' => $row['id'],
                 'product_name' => $row['product_name'],
-                'price' => formatRp($row['price'])
+                'price' => formatRp($row['price']),
+                'discount' => $row['discount']
             ];
         }
     }

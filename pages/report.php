@@ -1,19 +1,26 @@
 <?php  
 
-$sql = "SELECT a.*, b.user FROM transaction_header a LEFT JOIN login b ON a.user_id=b.id";
+$sql = "SELECT a.*, b.user FROM transaction_header a LEFT JOIN login b ON a.user_id=b.id ORDER BY a.id DESC";
 $result = $conn->query($sql);
 
 $list = '';
 if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
+
+        $dataList = "";
+        $sqlList = "SELECT a.quantity, b.product_name FROM transaction_detail a LEFT JOIN product b ON a.product_id=b.id WHERE a.transaction_header_id='{$row['id']}' ORDER BY b.product_name ASC ";
+        $resultList = $conn->query($sqlList);
+        while($rowList = $resultList->fetch_assoc()) {
+            $dataList .= "<span>- {$rowList['product_name']} x {$rowList['quantity']}</span><br>";
+        }
+
         $list .= " <tr>
             <td>{$row['document_code']}{$row['document_number']}</td>
             <td>{$row['user']}</td>
             <td>Rp. " .formatRp($row['total']). "</td>
             <td>{$row['date']}</td>
             <td>
-                <span>- 1 x 1</span><br>
-                <span>- Product 2 x 1</span><br>
+                $dataList
             </td>
         </tr>";
     }

@@ -35,7 +35,8 @@
                         <hr>
                         <div id="listCart"></div>
                         <div class="mb-3">
-                            <h5>Total : Rp. <span id="total"></span></h5>
+                            <span class="d-none" id="totalCheckout">0</span>
+                            <h5>Total : Rp. <span id="totalCheckoutShow">0</span></h5>
                         </div>
                         <button class="btn btn-primary" id="btnConfirm" onclick="confirmCheckout()">Confirm</button>
                     </div>
