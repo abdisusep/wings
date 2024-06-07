@@ -2,6 +2,7 @@
 
 session_start();
 include "config/db.php";
+include "config/func.php";
 
 if (isset($_SESSION['user'])) {
     if (isset($_GET['p'])) {
